@@ -5,6 +5,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+import com.epam.training.money.impl.BankService;
 import java.util.Currency;
 
 import org.junit.jupiter.api.Test;
@@ -19,6 +20,7 @@ public class MoneyIT {
     private static final Currency USD_CURRENCY = Currency.getInstance("USD");
     private static final Currency GBP_CURRENCY = Currency.getInstance("GBP");
 
+    private final MonetaryValueConversionService monetaryValueConversionService = new BankService();
     @Test
     public void testAddReturnsExpectedResultWhenDifferentCurrencyIsUsed() {
         // Given
@@ -26,11 +28,11 @@ public class MoneyIT {
         Money moneyToAdd = new Money(1, USD_CURRENCY);
 
         // When
-        Money result = underTest.add(moneyToAdd);
+        Money result = underTest.add(moneyToAdd,monetaryValueConversionService);
 
         // Then
-        assertThat(result.how_much(), equalTo(369.3));
-        assertThat(result.what(), equalTo(HUF_CURRENCY));
+        assertThat(result.getAmount(), equalTo(369.3));
+        assertThat(result.getCurrency(), equalTo(HUF_CURRENCY));
     }
 
     @Test
@@ -40,11 +42,11 @@ public class MoneyIT {
         Money moneyToAdd = new Money(1, HUF_CURRENCY);
 
         // When
-        Money result = underTest.add(moneyToAdd);
+        Money result = underTest.add(moneyToAdd,monetaryValueConversionService);
 
         // Then
-        assertThat(result.how_much(), equalTo(121.0));
-        assertThat(result.what(), equalTo(HUF_CURRENCY));
+        assertThat(result.getAmount(), equalTo(121.0));
+        assertThat(result.getCurrency(), equalTo(HUF_CURRENCY));
     }
 
     @Test
@@ -54,7 +56,7 @@ public class MoneyIT {
         Money moneyToAdd = new Money(1, GBP_CURRENCY);
 
         // When
-        Money result = underTest.add(moneyToAdd);
+        Money result = underTest.add(moneyToAdd,monetaryValueConversionService);
 
         // Then
         assertThat(result, nullValue());
@@ -69,7 +71,7 @@ public class MoneyIT {
         Money moneyToCompareWith = new Money(secondValue, USD_CURRENCY);
 
         // When
-        Integer result = underTest.compareTo(moneyToCompareWith);
+        Integer result = underTest.compareTo(moneyToCompareWith,monetaryValueConversionService);
 
         // Then
         assertThat(signum(result), equalTo(expectedSignum));
@@ -83,7 +85,7 @@ public class MoneyIT {
         Money moneyToCompareWith = new Money(secondValue, HUF_CURRENCY);
 
         // When
-        Integer result = underTest.compareTo(moneyToCompareWith);
+        Integer result = underTest.compareTo(moneyToCompareWith,monetaryValueConversionService);
 
         // Then
         assertThat(signum(result), equalTo(expectedSignum));
@@ -96,7 +98,7 @@ public class MoneyIT {
         Money moneyToCompareWith = new Money(1, GBP_CURRENCY);
 
         // When
-        Integer result = underTest.compareTo(moneyToCompareWith);
+        Integer result = underTest.compareTo(moneyToCompareWith,monetaryValueConversionService);
 
         // Then
         assertThat(result, nullValue());
