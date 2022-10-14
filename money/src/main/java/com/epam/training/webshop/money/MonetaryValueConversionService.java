@@ -1,4 +1,4 @@
-package com.epam.training.money;
+package com.epam.training.webshop.money;
 
 import java.util.Currency;
 

@@ -1,6 +1,7 @@
 package com.epam.training.money.impl;
 
-import com.epam.training.money.ConversionRate;
+import com.epam.training.webshop.money.ConversionRate;
+import com.epam.training.webshop.money.impl.FixedConverter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

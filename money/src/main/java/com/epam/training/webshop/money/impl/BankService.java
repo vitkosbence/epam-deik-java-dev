@@ -1,8 +1,9 @@
-package com.epam.training.money.impl;
+package com.epam.training.webshop.money.impl;
 
-import com.epam.training.money.ConversionRate;
-import com.epam.training.money.MonetaryValueConversionService;
-import com.epam.training.money.exception.UnknownConversionRateException;
+import com.epam.training.webshop.money.ConversionRate;
+import com.epam.training.webshop.money.MonetaryValueConversionService;
+import com.epam.training.webshop.money.exception.UnknownConversionRateException;
+
 import java.util.Currency;
 import java.util.List;
 

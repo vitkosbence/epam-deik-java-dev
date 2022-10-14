@@ -1,6 +1,7 @@
-package com.epam.training.money;
+package com.epam.training.webshop.cart;
 
-import com.epam.training.money.impl.Product;
+import com.epam.training.webshop.coupon.Coupon;
+import com.epam.training.webshop.product.Product;
 
 import java.util.List;
 
@@ -28,8 +29,29 @@ import java.util.List;
  */
 public interface Cart {
 
-    List<Product> listProduct();
+    List<Product> listProducts();
 
     void addProduct(Product product);
+
+    void addProduct(String name);
+
+
+    void removeProduct(Product productToRemove);
+
+    void addCoupon(Coupon coupon);
+
+    List<Coupon> getCouponsFromBasket();
+
+    double getTotalNetPrice();
+
+    double getTotalGrossPrice();
+
+    void order();
+
+    double getBasePrice();
+
+    double getDiscountForCoupons();
+
+//    void subscribe(Observer observer);
 
 }

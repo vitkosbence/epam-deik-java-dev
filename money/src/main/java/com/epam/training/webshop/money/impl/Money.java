@@ -1,6 +1,7 @@
-package com.epam.training.money.impl;
+package com.epam.training.webshop.money.impl;
 
-import com.epam.training.money.MonetaryValueConversionService;
+import com.epam.training.webshop.money.MonetaryValueConversionService;
+
 import java.util.Currency;
 
 public class Money {
@@ -27,7 +28,7 @@ public class Money {
   }
 
   public Integer compareTo(final Money money, MonetaryValueConversionService monetaryValueConversionService) {
-    double convertedMoney = convertMoney(money, monetaryValueConversionService);
+    final double convertedMoney = convertMoney(money, monetaryValueConversionService);
     return Double.compare(this.getAmount(), convertedMoney);
   }
 
