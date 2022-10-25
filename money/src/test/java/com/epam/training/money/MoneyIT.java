@@ -1,18 +1,19 @@
 package com.epam.training.money;
 
-import static java.lang.Integer.signum;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
-
 import com.epam.training.webshop.money.MonetaryValueConversionService;
 import com.epam.training.webshop.money.exception.UnknownConversionRateException;
 import com.epam.training.webshop.money.impl.BankService;
 import com.epam.training.webshop.money.impl.Money;
-import java.util.Currency;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+
+import java.util.Currency;
+
+import static java.lang.Integer.signum;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class MoneyIT {
 

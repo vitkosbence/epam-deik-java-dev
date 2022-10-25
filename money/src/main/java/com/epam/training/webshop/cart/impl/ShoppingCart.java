@@ -4,31 +4,33 @@ import com.epam.training.webshop.cart.Cart;
 import com.epam.training.webshop.cart.exception.UnknownProductException;
 import com.epam.training.webshop.coupon.Coupon;
 import com.epam.training.webshop.gross.impl.GrossPriceCalculatorDecorator;
+import com.epam.training.webshop.order.Observer;
 import com.epam.training.webshop.order.OrderRepository;
 import com.epam.training.webshop.product.Product;
 import com.epam.training.webshop.product.ProductRepository;
-import com.epam.training.webshop.product.impl.SimpleProduct;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class ShoppingCart implements Cart {
 
     private final List<Product> products;
     private final List<Coupon> coupons;
-
+    private final List<Observer> observers;
     private final GrossPriceCalculatorDecorator grossPriceCalculatorDecorator;
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
 
     public ShoppingCart(final OrderRepository orderRepository, final ProductRepository productRepository,
-                        final GrossPriceCalculatorDecorator grossPriceCalculatorDecorator, List<Product> products) {
+                        final GrossPriceCalculatorDecorator grossPriceCalculatorDecorator,
+                        final List<Product> products, final List<Observer> observers,
+                        final List<Coupon> coupons) {
         this.orderRepository = orderRepository;
         this.productRepository = productRepository;
         this.grossPriceCalculatorDecorator = grossPriceCalculatorDecorator;
         this.products = products;
-        coupons = new ArrayList<>();
+        this.observers = observers;
+        this.coupons = coupons;
     }
 
     public ShoppingCart(final OrderRepository orderRepository, final ProductRepository productRepository,
@@ -38,22 +40,17 @@ public class ShoppingCart implements Cart {
         this.grossPriceCalculatorDecorator = grossPriceCalculatorDecorator;
         this.products = new ArrayList<>();
         coupons = new ArrayList<>();
+        observers = new ArrayList<>();
     }
 
     @Override
-    public List<Product> listProducts() {
+    public List<Product> getProducts() {
         return products;
     }
 
     @Override
     public void addProduct(Product product) {
-
-    }
-
-    //    @Override
-    public void addProduct(SimpleProduct product) {
-        Optional.of(product)
-                .ifPresent(this.products::add);
+        products.add(product);
     }
 
     @Override
@@ -68,11 +65,6 @@ public class ShoppingCart implements Cart {
 
     @Override
     public void removeProduct(Product productToRemove) {
-
-    }
-
-//    @Override
-    public void removeProduct(SimpleProduct productToRemove) {
         products.remove(productToRemove);
     }
 
@@ -101,6 +93,7 @@ public class ShoppingCart implements Cart {
     @Override
     public void order() {
         orderRepository.saveOrder(this);
+        observers.forEach(observer -> observer.notify(this));
     }
 
     @Override
@@ -114,11 +107,16 @@ public class ShoppingCart implements Cart {
 
     @Override
     public double getDiscountForCoupons() {
-        final double discount = 0;
-//        for (Coupon coupon : coupons) {
-//            discount += coupon.getDiscountForProducts(products);
-//        }
+        double discount = 0;
+        for (Coupon coupon : coupons) {
+            discount += coupon.getDiscountForProducts(products);
+        }
         return discount;
+    }
+
+    @Override
+    public void subscribe(Observer observer) {
+        observers.add(observer);
     }
 
     @Override
@@ -130,4 +128,5 @@ public class ShoppingCart implements Cart {
                 ", orderRepository=" + orderRepository +
                 '}';
     }
+
 }
