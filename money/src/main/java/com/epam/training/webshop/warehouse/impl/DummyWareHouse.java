@@ -5,9 +5,11 @@ import com.epam.training.webshop.product.Product;
 import com.epam.training.webshop.warehouse.WareHouse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component
 public class DummyWareHouse implements WareHouse {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DummyWareHouse.class);

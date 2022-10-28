@@ -3,7 +3,7 @@ package com.epam.training.webshop.cart.impl;
 import com.epam.training.webshop.cart.Cart;
 import com.epam.training.webshop.cart.exception.UnknownProductException;
 import com.epam.training.webshop.coupon.Coupon;
-import com.epam.training.webshop.gross.impl.GrossPriceCalculatorDecorator;
+import com.epam.training.webshop.gross.GrossPriceCalculator;
 import com.epam.training.webshop.order.Observer;
 import com.epam.training.webshop.order.OrderRepository;
 import com.epam.training.webshop.product.Product;
@@ -17,12 +17,12 @@ public class ShoppingCart implements Cart {
     private final List<Product> products;
     private final List<Coupon> coupons;
     private final List<Observer> observers;
-    private final GrossPriceCalculatorDecorator grossPriceCalculatorDecorator;
+    private final GrossPriceCalculator grossPriceCalculatorDecorator;
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
 
     public ShoppingCart(final OrderRepository orderRepository, final ProductRepository productRepository,
-                        final GrossPriceCalculatorDecorator grossPriceCalculatorDecorator,
+                        final GrossPriceCalculator grossPriceCalculatorDecorator,
                         final List<Product> products, final List<Observer> observers,
                         final List<Coupon> coupons) {
         this.orderRepository = orderRepository;
@@ -34,10 +34,10 @@ public class ShoppingCart implements Cart {
     }
 
     public ShoppingCart(final OrderRepository orderRepository, final ProductRepository productRepository,
-                        final GrossPriceCalculatorDecorator grossPriceCalculatorDecorator) {
+                        final GrossPriceCalculator grossPriceCalculator) {
         this.orderRepository = orderRepository;
         this.productRepository = productRepository;
-        this.grossPriceCalculatorDecorator = grossPriceCalculatorDecorator;
+        this.grossPriceCalculatorDecorator = grossPriceCalculator;
         this.products = new ArrayList<>();
         coupons = new ArrayList<>();
         observers = new ArrayList<>();

@@ -6,13 +6,15 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.io.IOException;
+import java.util.Arrays;
 
-/* Entry point of the application */
+/* Az alkalmazás belépés pontja. */
 public class WebShopApplication {
 
     public static void main(String[] args) throws IOException {
 //        ApplicationConfig.cliInterpreter().start();
         ApplicationContext context = new AnnotationConfigApplicationContext(ApplicationConfig.class);
+        Arrays.stream(context.getBeanDefinitionNames()).forEach(System.out::println);
         CliInterpreter cli = context.getBean(CliInterpreter.class);
         cli.start();
     }

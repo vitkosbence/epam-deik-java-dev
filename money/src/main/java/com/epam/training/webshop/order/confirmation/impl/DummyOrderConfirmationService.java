@@ -4,7 +4,9 @@ import com.epam.training.webshop.cart.Cart;
 import com.epam.training.webshop.order.confirmation.OrderConfirmationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
+@Service
 public class DummyOrderConfirmationService implements OrderConfirmationService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DummyOrderConfirmationService.class);
