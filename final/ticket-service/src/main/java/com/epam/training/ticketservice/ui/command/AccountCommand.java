@@ -20,7 +20,7 @@ public class AccountCommand {
     public String adminSignIn(String username,String password) {
         Optional<AccountDto> account = accountService.logIn(username,password);
         if(account.isEmpty()){
-            return "No account with that username/password combination";
+            return "Login failed due to incorrect credentials";
         }
         if(account.get().getType() != Account.UserType.ADMIN){
             return "Sign in successful, but not an admin account";
@@ -32,10 +32,16 @@ public class AccountCommand {
     public String describeAccount() {
         Optional<AccountDto> account = accountService.describe();
         if(account.isEmpty()){
-            return "Nobody is logged in at the moment";
+            return "You are not signed in";
         }
         return "Signed in with "+((account.get().getType() == Account.UserType.ADMIN) ? "privileged" : "normal") +
                 " account '"+account.get().getUsername()+"'";
+    }
+
+    @ShellMethod(key = "sign out", value = "Signs you out from the currently active account")
+    public String signOut() {
+        accountService.logOut();
+        return null;
     }
 
 }

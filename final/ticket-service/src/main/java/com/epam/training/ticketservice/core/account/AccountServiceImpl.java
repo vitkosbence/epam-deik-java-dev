@@ -35,4 +35,11 @@ public class AccountServiceImpl implements AccountService{
         return Optional.ofNullable(loggedInAccount);
     }
 
+    @Override
+    public Optional<AccountDto> logOut() {
+        Optional<AccountDto> currentAccount = describe();
+        loggedInAccount = null;
+        return currentAccount;
+    }
+
 }

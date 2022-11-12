@@ -11,6 +11,6 @@ import static org.jline.utils.AttributedStyle.GREEN;
 public class PromptConfiguration implements PromptProvider {
     @Override
     public AttributedString getPrompt() {
-        return new AttributedString("Ticket service>", DEFAULT.foreground(GREEN));
+        return new AttributedString("Ticket service>");
     }
 }
