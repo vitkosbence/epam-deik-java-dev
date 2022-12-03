@@ -19,8 +19,8 @@ public class InMemoryDatabaseInitializer {
     private final RoomRepository roomRepository;
 
     @PostConstruct
-    public void init(){
-        Account admin = new Account("admin","admin",Account.UserType.ADMIN);
+    public void init() {
+        Account admin = new Account("admin", "admin", Account.UserType.ADMIN);
         accountRepository.save(admin);
     }
 }

@@ -25,14 +25,14 @@ public class RoomCommand {
     @ShellMethodAvailability("isAvailable")
     @ShellMethod(key = "create room", value = "Creates a new room from: name, number of rows and columns arguments")
     public String createRoom(String name, int rows, int columns) {
-        roomService.createRoom(name,rows,columns);
+        roomService.createRoom(name, rows, columns);
         return null;
     }
 
     @ShellMethodAvailability("isAvailable")
     @ShellMethod(key = "update room", value = "Updates room based on: name, number of rows and columns arguments")
     public String updateRoom(String name, int rows, int columns) {
-        roomService.updateRoom(name,rows,columns);
+        roomService.updateRoom(name, rows, columns);
         return null;
     }
 
@@ -46,24 +46,24 @@ public class RoomCommand {
     @ShellMethod(key = "list rooms", value = "Lists all existing rooms")
     public String roomList() {
         List<RoomDto> rooms = roomService.getRoomList();
-        if(rooms.isEmpty()){
+        if (rooms.isEmpty()) {
             return "There are no rooms at the moment";
         }
         StringBuilder stringBuilder = new StringBuilder();
         String separator = "";
-        for (RoomDto room:
+        for (RoomDto room :
                 rooms) {
-            stringBuilder.append(separator+"Room "+room.getName()+" with "+room.getRows()* room.getColumns())
-                    .append(" seats, "+room.getRows()+" rows and "+room.getColumns()+" columns");
+            stringBuilder.append(separator + "Room " + room.getName() + " with " + room.getRows() * room.getColumns())
+                    .append(" seats, " + room.getRows() + " rows and " + room.getColumns() + " columns");
             separator = "\n";
         }
         return stringBuilder.toString();
     }
 
-    private Availability isAvailable(){
+    private Availability isAvailable() {
         Optional<AccountDto> account = accountService.describe();
-        return account.isPresent() && account.get().getType() == Account.UserType.ADMIN ?
-                Availability.available() :
+        return account.isPresent() && account.get().getType() == Account.UserType.ADMIN
+                ? Availability.available() :
                 Availability.unavailable("You are not logged in as an admin");
     }
 }

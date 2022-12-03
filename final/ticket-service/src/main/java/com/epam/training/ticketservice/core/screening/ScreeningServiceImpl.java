@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 @Transactional
-public class ScreeningServiceImpl implements ScreeningService{
+public class ScreeningServiceImpl implements ScreeningService {
 
     private final ScreeningRepository screeningRepository;
     private final MovieRepository movieRepository;
@@ -36,53 +36,55 @@ public class ScreeningServiceImpl implements ScreeningService{
             throws ScreeningOverlapsException, ScreeningInBreaktimeException, MovieOrRoomNotFoundException {
         Optional<Movie> movie = movieRepository.findByTitle(movieName);
         Optional<Room> room = roomRepository.findRoomByName(roomName);
-        if(movie.isPresent() && room.isPresent()){
-            Optional<Long> timeBefore = minutesFromLastScreening(room.get().getId(),startTime);
-            Optional<Long> timeAfter = minutesUntilNextScreening(room.get().getId(),startTime,movie.get().getLength());
-            if((timeBefore.isPresent() && timeBefore.get() <= 0) || (timeAfter.isPresent() && timeAfter.get() <= 0)){
+        if (movie.isPresent() && room.isPresent()) {
+            Optional<Long> timeBefore = minutesFromLastScreening(room.get().getId(), startTime);
+            Optional<Long> timeAfter =
+                    minutesUntilNextScreening(room.get().getId(), startTime, movie.get().getLength());
+            if ((timeBefore.isPresent() && timeBefore.get() <= 0) || (timeAfter.isPresent() && timeAfter.get() <= 0)) {
                 throw new ScreeningOverlapsException("The screening overlaps with another");
             }
-            if((timeBefore.isPresent() && timeBefore.get() < 10) || (timeAfter.isPresent() && timeAfter.get() < 10)){
-                throw new ScreeningInBreaktimeException("The screening doesn't allow for the necessary 10 minute break time");
+            if ((timeBefore.isPresent() && timeBefore.get() < 10) || (timeAfter.isPresent() && timeAfter.get() < 10)) {
+                throw new ScreeningInBreaktimeException("The screening doesn't allow for"
+                        + " the necessary 10 minute break time");
             }
-            Screening screening = new Screening(movie.get().getId(),room.get().getId(),startTime);
+            Screening screening = new Screening(movie.get().getId(), room.get().getId(), startTime);
             screeningRepository.save(screening);
-        }
-        else{
+        } else {
             throw new MovieOrRoomNotFoundException("Either the given movie or room doesn't exist.");
         }
     }
 
-    private Optional<Long> minutesFromLastScreening(Integer roomId, LocalDateTime startTime){
+    private Optional<Long> minutesFromLastScreening(Integer roomId, LocalDateTime startTime) {
         Optional<Screening> lastScreening = screeningRepository
-                .getFirstByStartTimeIsLessThanEqualAndRoomIdEquals(startTime,roomId);
-        if(lastScreening.isEmpty()){
+                .getFirstByStartTimeIsLessThanEqualAndRoomIdEquals(startTime, roomId);
+        if (lastScreening.isEmpty()) {
             return Optional.empty();
         }
         Optional<Movie> lastMovie = movieRepository.findById(lastScreening.get().getMovieId());
-        if(lastMovie.isEmpty()){
+        if (lastMovie.isEmpty()) {
             return Optional.empty();
         }
-        return Optional.of(lastScreening.get().getStartTime().until(startTime, ChronoUnit.MINUTES)-lastMovie.get().getLength());
+        return Optional.of(lastScreening.get().getStartTime().until(startTime, ChronoUnit.MINUTES)
+                - lastMovie.get().getLength());
     }
 
-    private Optional<Long> minutesUntilNextScreening(Integer roomId, LocalDateTime startTime, int movieLength){
+    private Optional<Long> minutesUntilNextScreening(Integer roomId, LocalDateTime startTime, int movieLength) {
         Optional<Screening> lastScreening = screeningRepository
-                .getFirstByStartTimeIsGreaterThanEqualAndRoomIdEquals(startTime,roomId);
-        if(lastScreening.isEmpty()){
+                .getFirstByStartTimeIsGreaterThanEqualAndRoomIdEquals(startTime, roomId);
+        if (lastScreening.isEmpty()) {
             return Optional.empty();
         }
-        return Optional.of(startTime.until(lastScreening.get().getStartTime(),ChronoUnit.MINUTES)-movieLength);
+        return Optional.of(startTime.until(lastScreening.get().getStartTime(), ChronoUnit.MINUTES) - movieLength);
     }
 
     @Override
     public void deleteScreening(String movieName, String roomName, LocalDateTime startTime) {
         Optional<Movie> movie = movieRepository.findByTitle(movieName);
         Optional<Room> room = roomRepository.findRoomByName(roomName);
-        if(movie.isPresent() && room.isPresent()){
-            screeningRepository.deleteScreeningByMovieIdAndRoomIdAndStartTime(movie.get().getId()
-                    ,room.get().getId()
-                    ,startTime);
+        if (movie.isPresent() && room.isPresent()) {
+            screeningRepository.deleteScreeningByMovieIdAndRoomIdAndStartTime(movie.get().getId(),
+                    room.get().getId(),
+                    startTime);
         }
     }
 
@@ -93,18 +95,18 @@ public class ScreeningServiceImpl implements ScreeningService{
                 .collect(Collectors.toList());
     }
 
-    private ScreeningDto convertEntityToDto(Screening screening){
+    private ScreeningDto convertEntityToDto(Screening screening) {
         Optional<Movie> movie = movieRepository.findById(screening.getMovieId());
         Optional<Room> room = roomRepository.findById(screening.getRoomId());
-        if(movie.isEmpty() || room.isEmpty()){
+        if (movie.isEmpty() || room.isEmpty()) {
             return null;
         }
-        return new ScreeningDto(new MovieDto(movie.get().getTitle(),movie.get().getGenre(),movie.get().getLength())
-                ,new RoomDto(room.get().getName(),room.get().getRows(),room.get().getColumns())
-                ,screening.getStartTime());
+        return new ScreeningDto(new MovieDto(movie.get().getTitle(), movie.get().getGenre(), movie.get().getLength()),
+                new RoomDto(room.get().getName(), room.get().getRows(), room.get().getColumns()),
+                screening.getStartTime());
     }
 
-    private Optional<ScreeningDto> convertEntityToDto(Optional<Screening> screening){
+    private Optional<ScreeningDto> convertEntityToDto(Optional<Screening> screening) {
         return screening.map(this::convertEntityToDto);
     }
 }

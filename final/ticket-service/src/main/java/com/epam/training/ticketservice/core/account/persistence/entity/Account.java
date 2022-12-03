@@ -3,7 +3,13 @@ package com.epam.training.ticketservice.core.account.persistence.entity;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Enumerated;
+import javax.persistence.EnumType;
+
 
 @Entity
 @Data
@@ -24,7 +30,7 @@ public class Account {
         this.type = type;
     }
 
-    public enum UserType{
+    public enum UserType {
         NORMAL,
         ADMIN
     }

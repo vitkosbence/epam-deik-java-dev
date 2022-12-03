@@ -8,9 +8,13 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Repository
-public interface ScreeningRepository extends JpaRepository<Screening,Integer> {
-    Optional<Screening> getScreeningByMovieIdAndRoomIdAndStartTime(Integer movieId, Integer roomId, LocalDateTime startTime);
+public interface ScreeningRepository extends JpaRepository<Screening, Integer> {
+    Optional<Screening> getScreeningByMovieIdAndRoomIdAndStartTime(
+            Integer movieId, Integer roomId, LocalDateTime startTime);
+
     long deleteScreeningByMovieIdAndRoomIdAndStartTime(Integer movieId, Integer roomId, LocalDateTime startTime);
+
     Optional<Screening> getFirstByStartTimeIsLessThanEqualAndRoomIdEquals(LocalDateTime startTime, Integer roomId);
+
     Optional<Screening> getFirstByStartTimeIsGreaterThanEqualAndRoomIdEquals(LocalDateTime startTime, Integer roomId);
 }

@@ -17,20 +17,20 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 @Transactional
-public class RoomServiceImpl implements RoomService{
+public class RoomServiceImpl implements RoomService {
 
     private final RoomRepository roomRepository;
 
     @Override
     public void createRoom(String name, int rows, int columns) {
-        Room room = new Room(name,rows,columns);
+        Room room = new Room(name, rows, columns);
         roomRepository.save(room);
     }
 
     @Override
     public void updateRoom(String name, int rows, int columns) {
-        Optional<Room> room =  roomRepository.findRoomByName(name);
-        if(room.isPresent()){
+        Optional<Room> room = roomRepository.findRoomByName(name);
+        if (room.isPresent()) {
             room.get().setRows(rows);
             room.get().setColumns(columns);
             roomRepository.save(room.get());
@@ -59,11 +59,11 @@ public class RoomServiceImpl implements RoomService{
                 .collect(Collectors.toList());
     }
 
-    private RoomDto convertEntityToDto(Room room){
+    private RoomDto convertEntityToDto(Room room) {
         return new RoomDto(room.getName(), room.getRows(), room.getColumns());
     }
 
-    private Optional<RoomDto> convertEntityToDto(Optional<Room> room){
+    private Optional<RoomDto> convertEntityToDto(Optional<Room> room) {
         return room.map(this::convertEntityToDto);
     }
 }
